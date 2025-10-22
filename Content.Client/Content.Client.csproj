@@ -64,6 +64,7 @@ SPDX-License-Identifier: MIT
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="CraftingSystem\" />
     <Folder Include="Resources\Prototypes\Actions\" />
     <Folder Include="Resources\Prototypes\Store\" />
   </ItemGroup>

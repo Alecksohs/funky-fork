@@ -26,6 +26,7 @@ using System.Linq;
 using System.Numerics;
 using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Systems.MenuBar.Widgets;
+using Content.Shared.Construction.Components;
 using Content.Shared.Construction.Prototypes;
 using Content.Shared.Whitelist;
 using Robust.Client.GameObjects;
@@ -63,6 +64,7 @@ namespace Content.Client.Construction.UI
         private ConstructionPrototype? _selected;
         private List<ConstructionPrototype> _favoritedRecipes = [];
         private Dictionary<string, TextureButton> _recipeButtons = new();
+        private CraftingMaterial? _material = null;
         private string _selectedCategory = string.Empty;
         private string _favoriteCatName = "construction-category-favorites";
         private string _forAllCategoryName = "construction-category-all";
@@ -138,7 +140,7 @@ namespace Content.Client.Construction.UI
             _constructionView.RecipeFavorited += (_, _) => OnViewFavoriteRecipe();
 
             PopulateCategories();
-            OnViewPopulateRecipes(_constructionView, (string.Empty, string.Empty));
+            OnViewPopulateRecipes(_constructionView, (string.Empty, string.Empty, null));
         }
 
         public void OnHudCraftingButtonToggled(ButtonToggledEventArgs args)
@@ -191,9 +193,9 @@ namespace Content.Client.Construction.UI
             PopulateInfo(_selected);
         }
 
-        private void OnViewPopulateRecipes(object? sender, (string search, string catagory) args)
+        private void OnViewPopulateRecipes(object? sender, (string search, string catagory, CraftingMaterial? material) args)
         {
-            var (search, category) = args;
+            var (search, category, material) = args;
 
             var recipes = new List<ConstructionPrototype>();
 
@@ -234,6 +236,9 @@ namespace Content.Client.Construction.UI
                         continue;
                     }
                 }
+
+                // if(material && recipe)
+
 
                 recipes.Add(recipe);
             }
@@ -482,9 +487,9 @@ namespace Content.Client.Construction.UI
             if (_selectedCategory == _favoriteCatName)
             {
                 if (_favoritedRecipes.Count > 0)
-                    OnViewPopulateRecipes(_constructionView, (string.Empty, _favoriteCatName));
+                    OnViewPopulateRecipes(_constructionView, (string.Empty, _favoriteCatName, null));
                 else
-                    OnViewPopulateRecipes(_constructionView, (string.Empty, string.Empty));
+                    OnViewPopulateRecipes(_constructionView, (string.Empty, string.Empty, null));
             }
 
             PopulateInfo(_selected);
