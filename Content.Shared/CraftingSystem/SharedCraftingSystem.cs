@@ -120,12 +120,13 @@ public abstract class SharedCraftingSystem : EntitySystem
 
     public IEnumerable<CraftingRecipePrototype> EnumerateRecipes() => _recipes.Values;
 
-    public List<CraftingRecipePrototype> GetRecipesByCategory(CraftingCategory category)
+    public List<CraftingRecipePrototype> GetRecipesByCategory(string category)
     {
         var results = new List<CraftingRecipePrototype>();
+
         foreach (var recipe in _recipes)
         {
-            if (recipe.Value.CraftingCategories.HasFlag(category))
+            if (string.Equals(recipe.Value.CraftingCategories.Id, category, StringComparison.CurrentCultureIgnoreCase))
             {
                 results.Add(recipe.Value);
             }

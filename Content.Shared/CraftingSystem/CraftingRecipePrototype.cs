@@ -18,7 +18,7 @@ public sealed class CraftingRecipePrototype : IPrototype
     // If true, show in the UI sorted first.
     [DataField] public bool IsCommonRecipe  { get; private set; } = false;
     // UI Categorization, make new ones if you must, don't overdo it.
-    [DataField] public CraftingCategory CraftingCategories { get; private set; } = CraftingCategory.Miscellaneous;
+    [DataField] public ProtoId<CraftingCategoryPrototype> CraftingCategories { get; private set; }
 
     // LESS USED
 

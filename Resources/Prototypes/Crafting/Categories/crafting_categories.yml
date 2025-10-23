@@ -1,0 +1,8 @@
+- type: craftingCategory
+  id: Category-Miscellaneous
+
+- type: craftingCategory
+  id: Category-Construction
+
+- type: craftingCategory
+  id: Category-Furniture
