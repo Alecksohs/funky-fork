@@ -9,6 +9,9 @@ public sealed class CraftingRecipePrototype : IPrototype
     [IdDataField] public string ID { get; private set; } = default!;
     [DataField] public string Name { get; private set; } = "Some Type of Item";
     [DataField] public string Description { get; private set; } = "Something.";
+
+    [DataField] public string OutputId {get; private set;} = string.Empty;
+
     [DataField] public Dictionary<EntProtoId, int> Requirements { get; private set; } =  new Dictionary<EntProtoId, int>();
     [DataField] public List<EntProtoId> RequiredTools { get; private set; } = new List<EntProtoId>();
     // Time to craft the item.
@@ -18,7 +21,7 @@ public sealed class CraftingRecipePrototype : IPrototype
     // If true, show in the UI sorted first.
     [DataField] public bool IsCommonRecipe  { get; private set; } = false;
     // UI Categorization, make new ones if you must, don't overdo it.
-    [DataField] public ProtoId<CraftingCategoryPrototype> CraftingCategories { get; private set; }
+    [DataField] public ProtoId<CraftingCategoryPrototype> CraftingCategory { get; private set; }
 
     // LESS USED
 

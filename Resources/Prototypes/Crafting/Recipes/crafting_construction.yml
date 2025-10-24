@@ -1,0 +1,33 @@
+- type: craftingRecipe
+  ID: recipe_MetalRod
+  name: "Metal Rod"
+  description: "A sturdy metal rod that can be used for various purposes."
+  OutputId: MetalRod
+  craftingCategories: Category-Construction
+  requirements:
+    SheetSteel: 5
+  requiredTools: []
+  doTime: 3.0
+  craftable: true
+  isCommonRecipe: false
+  massCraftable: false
+  resultStackAmount: 1
+  requiredMachineProtoIDs: []
+  requiredMachineTags: []
+
+- type: craftingRecipe
+  ID: recipe_ClownHorn
+  name: "Clown Horn"
+  description: "A sturdy metal rod that can be used for various purposes."
+  OutputId: MetalRod
+  craftingCategories: Category-Construction
+  requirements:
+    SheetSteel: 5
+  requiredTools: []
+  doTime: 3.0
+  craftable: true
+  isCommonRecipe: false
+  massCraftable: false
+  resultStackAmount: 1
+  requiredMachineProtoIDs: []
+  requiredMachineTags: []
