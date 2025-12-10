@@ -22,6 +22,7 @@ namespace Content.Shared.Materials;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class MaterialComponent : Component
 {
-
+    [DataField]
+    public string? MaterialId;
 }
 

@@ -1,0 +1,27 @@
+<ContainerButton xmlns="https://spacestation14.io"
+                 MinHeight="4"
+                 MaxHeight="40"
+                 HorizontalExpand="True"
+                 xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+                 xmlns:xNamespace="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:style="clr-namespace:Content.Client.Stylesheets"
+                 StyleClasses="recipeEntry">
+    <PanelContainer
+        VerticalExpand="True"
+        HorizontalExpand="True"
+        Margin="0">
+        <PanelContainer.PanelOverride>
+            <gfx:StyleBoxFlat BackgroundColor="{xNamespace:Static style:StyleNano.NanoGold}" />
+        </PanelContainer.PanelOverride>
+        <BoxContainer Orientation="Horizontal" SeparationOverride="4" VerticalExpand="False">
+            <!-- Texts -->
+            <BoxContainer Orientation="Horizontal" VerticalExpand="True" HorizontalExpand="True">
+                <TextureRect Name="Icon" Stretch="KeepAspect" MaxWidth="48"
+                             TexturePath="/Textures/Interface/VerbIcons/anchor.svg.192dpi.png">
+                </TextureRect>
+                <Label Name="NameLabel" ClipText="True" Text="Default Recipe Name" HorizontalExpand="True" Align="Left"
+                       SetHeight="20" />
+            </BoxContainer>
+        </BoxContainer>
+    </PanelContainer>
+</ContainerButton>

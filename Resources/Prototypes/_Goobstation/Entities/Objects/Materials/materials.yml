@@ -28,6 +28,7 @@
   - type: Item
     heldPrefix: bluespace_crystal
   - type: Material
+    MaterialId: bluespace_crystal
   - type: PhysicalComposition
     materialComposition:
       BSCrystal: 100

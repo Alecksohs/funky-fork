@@ -64,7 +64,7 @@ namespace Content.Client.Construction.UI
         ScrollContainer RecipesGridScrollContainer { get; }
         GridContainer RecipesGrid { get; }
 
-        event EventHandler<(string search, string catagory, CraftingMaterial? material)> PopulateRecipes;
+        event EventHandler<(string search, string catagory, string? material)> PopulateRecipes;
         event EventHandler<ItemList.Item?> RecipeSelected;
         event EventHandler RecipeFavorited;
         event EventHandler<bool> BuildButtonToggled;
@@ -149,7 +149,7 @@ namespace Content.Client.Construction.UI
         }
 
         public event EventHandler? ClearAllGhosts;
-        public event EventHandler<(string search, string catagory, CraftingMaterial? material)>? PopulateRecipes;
+        public event EventHandler<(string search, string catagory, string? material)>? PopulateRecipes;
         public event EventHandler<ItemList.Item?>? RecipeSelected;
         public event EventHandler? RecipeFavorited;
         public event EventHandler<bool>? BuildButtonToggled;

@@ -126,7 +126,7 @@ public abstract class SharedCraftingSystem : EntitySystem
 
         foreach (var recipe in _recipes)
         {
-            if (string.Equals(recipe.Value.CraftingCategories.Id, category, StringComparison.CurrentCultureIgnoreCase))
+            if (string.Equals(recipe.Value.CraftingCategory.Id, category, StringComparison.CurrentCultureIgnoreCase))
             {
                 results.Add(recipe.Value);
             }

@@ -56,6 +56,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: gold
   - type: PhysicalComposition
     materialComposition:
       Gold: 100
@@ -106,6 +107,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: silver
   - type: PhysicalComposition
     materialComposition:
       Silver: 100
@@ -157,6 +159,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: metal_hydrogen
   - type: PhysicalComposition
     materialComposition:
       MetalHydrogen: 100
@@ -217,6 +220,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: zaukerite
   - type: PhysicalComposition
     materialComposition:
       Zaukerite: 100

@@ -1,6 +1,7 @@
 using Content.Shared.Construction.Components;
 using Content.Shared.CraftingSystem.Events;
 using Content.Shared.Interaction.Events;
+using Content.Shared.Materials;
 using Robust.Shared.Player;
 
 namespace Content.Server.CraftingSystem;
@@ -12,14 +13,14 @@ public sealed class CraftingMaterialsSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<CraftingMaterialComponent, UseInHandEvent>(OnUsedInhand);
+        SubscribeLocalEvent<MaterialComponent, UseInHandEvent>(OnUsedInhand);
     }
 
-    private void OnUsedInhand(EntityUid uid, CraftingMaterialComponent component, UseInHandEvent args)
+    private void OnUsedInhand(EntityUid uid, MaterialComponent component, UseInHandEvent args)
     {
         if (!TryComp(args.User, out ActorComponent? actor))
             return;
 
-        RaiseNetworkEvent(new OpenCraftingMaterialUIEvent(component.CraftingMat), actor.PlayerSession);
+        RaiseNetworkEvent(new OpenCraftingMaterialUIEvent(component.MaterialId), actor.PlayerSession);
     }
 }

@@ -123,6 +123,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: plasma
   - type: PhysicalComposition
     materialComposition:
       Plasma: 100
@@ -198,6 +199,7 @@
     - Plastic
     - Sheet
   - type: Material
+    MaterialId: plastic
   - type: PhysicalComposition
     materialComposition:
       Plastic: 100
@@ -270,6 +272,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: uranium
   - type: Food
     transferAmount: 10
   - type: BadFood

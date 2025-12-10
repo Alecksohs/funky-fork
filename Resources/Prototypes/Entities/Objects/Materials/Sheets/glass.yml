@@ -54,6 +54,7 @@
     tags:
     - Sheet
   - type: Material
+    MaterialId: glass
   - type: Damageable
     damageContainer: Inorganic
     damageModifierSet: Glass

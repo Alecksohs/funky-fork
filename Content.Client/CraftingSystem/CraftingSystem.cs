@@ -14,6 +14,8 @@ public sealed class CraftingSystem : EntitySystem
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
     private CraftingMenuPresenter? _presenter;
 
+    public CraftingMenuPresenter? GetPresenter => _presenter;
+
     public bool CraftingEnabled { get; private set; }
 
     public override void Initialize()
@@ -31,8 +33,15 @@ public sealed class CraftingSystem : EntitySystem
         _presenter = null;
     }
 
+    public void RefreshUI()
+    {
+        _presenter?.Dispose();
+        _presenter = new CraftingMenuPresenter();
+        CraftingEnabled = true;
+    }
+
     private void OpenUIFiltered(OpenCraftingMaterialUIEvent ev)
     {
-        _presenter?.OpenUIFilteredByMaterial();
+        _presenter?.OpenUIFilteredByMaterial(ev.Material);
     }
 }

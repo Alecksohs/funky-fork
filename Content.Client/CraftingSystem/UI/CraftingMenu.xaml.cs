@@ -13,6 +13,8 @@ public interface  ICraftingMenuUI : IDisposable
     ItemList Recipes { get; }
 
 
+    event EventHandler<(string search, string category, string materialFilter)> PopulateRecipes;
+
     public void Dispose()
     {
         throw new NotImplementedException();
@@ -25,10 +27,10 @@ public sealed partial class CraftingMenu : DefaultWindow, ICraftingMenuUI
 
     public string[] Categories { get; set; } =  Array.Empty<string>();
     public ItemList Recipes { get; set; } = new ItemList();
+    public event EventHandler<(string search, string category, string materialFilter)>? PopulateRecipes;
 
-    public CraftingRecipePrototype selectedRecipe { get; set; }
+    public CraftingRecipePrototype? selectedRecipe { get; set; }
 
-    event EventHandler<(string search, string category, string materialFilter)> PopulateRecipes;
     public CraftingMenu()
     {
         SetSize = new Vector2(560, 450);
@@ -41,14 +43,23 @@ public sealed partial class CraftingMenu : DefaultWindow, ICraftingMenuUI
         IoCManager.InjectDependencies(this);
         RobustXamlLoader.Load(this);
 
+        Title = Loc.GetString("construction-menu-title");
+
         // TODO: as we get buttons, fill out events BELOW HERE but we haven't a UI and haven't any buttons.
 
         // TODO: that concludes events.
 
 
+        tabsContainer.SetTabTitle(0, Loc.GetString("crafting-system-category-common"));
+        tabsContainer.SetTabTitle(1, Loc.GetString("crafting-system-category-structure"));
+        InitStyleBoxes();
 
     }
 
+    private void InitStyleBoxes()
+    {
+
+    }
 
 
 

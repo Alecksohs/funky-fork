@@ -1,11 +1,14 @@
 using System.Linq;
 using Content.Client.UserInterface.Systems.MenuBar.Widgets;
+using Content.Shared.CCVar;
 using Content.Shared.CraftingSystem;
 using Content.Shared.Whitelist;
 using Robust.Client.GameObjects;
 using Robust.Client.Placement;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
+using Robust.Shared.Configuration;
+using Robust.Shared.Console;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.CraftingSystem.UI;
@@ -44,7 +47,7 @@ public sealed class CraftingMenuPresenter : IDisposable
             SystemBindingChanged(craftingSystem);
     }
 
-    private void OnPopulateRecipes(object? sender, (string search, string category, string materialFilter) e)
+    private void OnPopulateRecipes(object? sender, (string search, string category, string? materialFilter) e)
     {
         var (search, category, materialFilter) = e;
 
@@ -99,7 +102,15 @@ public sealed class CraftingMenuPresenter : IDisposable
         // We've added all recipes, now for the rest. Sorting now.
         if (string.IsNullOrEmpty(search))
         {
-            recipes.Sort();
+            recipes.Sort((a, b) =>
+                {
+                    int commonFirst = b.IsCommonRecipe.CompareTo(a.IsCommonRecipe);
+                    if(commonFirst != 0)
+                        return commonFirst;
+
+                    return string.Compare(a.Name, b.Name, StringComparison.Ordinal);
+
+                });
         }
         else
         {
@@ -198,14 +209,14 @@ public sealed class CraftingMenuPresenter : IDisposable
     {
         if (newSystem is null)
         {
-            if (_craftingMenu is null)
+            if (_craftingSystem is null)
                 return;
 
             UnbindFromSystem();
         }
         else
         {
-            if (_craftingMenu is null)
+            if (_craftingSystem is null)
             {
                 BindToSystem(newSystem);
                 return;
@@ -244,13 +255,44 @@ public sealed class CraftingMenuPresenter : IDisposable
         _craftingSystem = null;
     }
 
-    public void OpenUIFilteredByMaterial()
+    public void OpenUIFilteredByMaterial(string? material)
     {
-        throw new NotImplementedException();
+        WindowOpen = true;
+        OnPopulateRecipes(_playerManager.LocalSession, (string.Empty, string.Empty, material) );
     }
 
     public void Dispose()
     {
         _craftingMenu.Dispose();
+    }
+}
+
+public sealed class RefreshCraftingMenuCommand : IConsoleCommand
+{
+    [Dependency] private readonly IEntityManager _e = default!;
+
+    public string Command => "ploopy";
+    public string Description => "mr krabs i plimopted..";
+    public string Help => $"Usage: {Command} / {Command} <preset>";
+    public void Execute(IConsoleShell shell, string argStr, string[] args)
+    {
+        try
+        {
+            var sysMan = IoCManager.Resolve<IEntitySystemManager>();
+
+            if (!sysMan.TryGetEntitySystem<Content.Client.CraftingSystem.CraftingSystem>(out var craftingSys))
+            {
+                shell.WriteLine("Client crafting system not found. Are you running this on the client?");
+                return;
+            }
+
+            // Prefer a public API on the system.
+            craftingSys.RefreshUI();
+            shell.WriteLine("Crafting UI refreshed.");
+        }
+        catch (Exception e)
+        {
+            shell.WriteLine($"Failed to refresh crafting UI: {e.GetType().Name}: {e.Message}");
+        }
     }
 }

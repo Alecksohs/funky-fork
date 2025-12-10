@@ -64,7 +64,7 @@ namespace Content.Client.Construction.UI
         private ConstructionPrototype? _selected;
         private List<ConstructionPrototype> _favoritedRecipes = [];
         private Dictionary<string, TextureButton> _recipeButtons = new();
-        private CraftingMaterial? _material = null;
+        private string? _material = null;
         private string _selectedCategory = string.Empty;
         private string _favoriteCatName = "construction-category-favorites";
         private string _forAllCategoryName = "construction-category-all";
@@ -193,7 +193,7 @@ namespace Content.Client.Construction.UI
             PopulateInfo(_selected);
         }
 
-        private void OnViewPopulateRecipes(object? sender, (string search, string catagory, CraftingMaterial? material) args)
+        private void OnViewPopulateRecipes(object? sender, (string search, string catagory, string? material) args)
         {
             var (search, category, material) = args;
 

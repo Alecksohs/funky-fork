@@ -72,6 +72,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: steel
   - type: PhysicalComposition
     materialComposition:
       Steel: 100
@@ -150,6 +151,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: brass
   - type: PhysicalComposition
     materialComposition:
       Brass: 100
@@ -218,6 +220,7 @@
   suffix: Full
   components:
   - type: Material
+    MaterialId: plasteel
   - type: PhysicalComposition
     materialComposition:
       Plasteel: 100
