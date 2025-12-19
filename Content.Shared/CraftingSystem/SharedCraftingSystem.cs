@@ -1,8 +1,13 @@
 using System.Linq;
+using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Inventory;
+using Content.Shared.Item;
+using Content.Shared.Lock;
 using Content.Shared.Stacks;
+using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared.CraftingSystem;
 
@@ -10,6 +15,7 @@ public abstract class SharedCraftingSystem : EntitySystem
 {
 
     [Dependency] private readonly IPrototypeManager _protoMan = default!;
+
 
 
     private static readonly ISawmill _sawmill = Logger.GetSawmill("Crafting System");
@@ -42,11 +48,13 @@ public abstract class SharedCraftingSystem : EntitySystem
     private bool PassesSanityChecks(CraftingRecipePrototype proto)
     {
         if (proto.RequiredMachineProtoIDs.Count != 0 && proto.RequiredMachineTags.Count != 0)
-            return true;
+        {
+            _sawmill.Error(
+                $"Crafting recipe '{proto.ID}' defines both RequiredMachineProtoIDs and RequiredMachineTags. Only define one. This is a code quality problem, not an inherent error. Fix it though.");
+            return false;
+        }
 
-        _sawmill.Error(
-            $"Crafting recipe '{proto.ID}' defines both RequiredMachineProtoIDs and RequiredMachineTags. Only define one. This is a code quality problem, not an inherent error. Fix it though.");
-        return false;
+        return true;
 
     }
 
@@ -109,13 +117,19 @@ public abstract class SharedCraftingSystem : EntitySystem
         EntityLookupSystem entLookup,
         EntityUid entity)
     {
+        if(!CanCraft(recipe))
+            return false;
+
         // TODO: Turn this into a CVAR please.
         const float range = 1.5f;
 
         var nearbyCounts = GetNearbyMaterialCounts(entity, entLookup, handsSystem, range);
         var craftingReqsMet = CheckCraftingRequirements(recipe, nearbyCounts);
 
-        return CanCraft(recipe) && craftingReqsMet;
+        if(!craftingReqsMet)
+            return false;
+
+        return true;
     }
 
     public IEnumerable<CraftingRecipePrototype> EnumerateRecipes() => _recipes.Values;
@@ -144,4 +158,57 @@ public abstract class SharedCraftingSystem : EntitySystem
         return false;
     }
 
+    public bool GetIsHandheld(CraftingRecipePrototype? recipePrototype, out EntityPrototype? outputItem)
+    {
+        if (recipePrototype == null)
+        {
+            outputItem = null;
+            return false;
+        }
+        bool isHandheld;
+        if (!_protoMan.TryIndex(recipePrototype.OutputId, out outputItem))
+        {
+            return false;
+        }
+        if (!outputItem.Components.TryGetValue("Item", out var itemComp))
+            isHandheld = false;
+        else
+        {
+            ItemComponent? comp = itemComp.Component as ItemComponent;
+            isHandheld = comp != null;
+        }
+
+        return isHandheld;
+    }
+
+
+}
+
+
+[Serializable, NetSerializable]
+public sealed class CraftingRequestReceivedArgs : EntityEventArgs
+{
+    public string RecipeID { get; }
+
+    public CraftingRequestReceivedArgs(string id)
+    {
+        RecipeID = id;
+    }
+}
+[Serializable, NetSerializable]
+public sealed partial class CraftingCompletedEvent : DoAfterEvent
+{
+    public string RecipeId { get; }
+    public int CrafterUID { get; }
+
+    public CraftingCompletedEvent(string id, int crafter)
+    {
+        RecipeId = id;
+        CrafterUID = crafter;
+    }
+
+    public override DoAfterEvent Clone()
+    {
+        return this;
+    }
 }

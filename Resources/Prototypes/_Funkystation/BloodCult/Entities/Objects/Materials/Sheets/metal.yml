@@ -13,7 +13,7 @@
   description: A sheet of otherworldly steel, used by acolytes of cosmic entities to assemble twisted constructs.
   components:
   - type: Material
-    MaterialId: runed_metal
+    materialId: runed_metal
   - type: PhysicalComposition
     materialComposition:
       RunedSteel: 100

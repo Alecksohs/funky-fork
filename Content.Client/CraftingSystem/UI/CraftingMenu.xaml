@@ -10,23 +10,8 @@
             <PanelContainer Name="GridHolder" VerticalExpand="True" SizeFlagsStretchRatio="1"
                             StyleClasses="PdaBorderRect">
                 <ScrollContainer VerticalExpand="True" HorizontalExpand="True">
-                    <GridContainer Columns="2" VerticalExpand="True" HorizontalExpand="True" HSeparationOverride="4">
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
-                        <cm:CraftingMenuEntry></cm:CraftingMenuEntry>
+                    <GridContainer Name="EntryHolder" Columns="2" VerticalExpand="True" HorizontalExpand="True" HSeparationOverride="4">
+
 
                     </GridContainer>
                 </ScrollContainer>

@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Shared.CraftingSystem;
+using Content.Shared.DoAfter;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Stacks;
@@ -15,24 +16,55 @@ public sealed class CraftingSystem : SharedCraftingSystem
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly SharedStackSystem _stack = default!;
+    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency]private readonly SharedTransformSystem _transform = default!;
 
 
     public override void Initialize()
     {
         base.Initialize();
+        SubscribeNetworkEvent<CraftingRequestReceivedArgs>(TryCraft);
+        SubscribeLocalEvent<CraftingCompletedEvent>(OnCraftingCompleted);
     }
 
-    public bool TryCraft(EntityUid uid, string recipeId)
+    private void OnCraftingCompleted(CraftingCompletedEvent ev)
     {
-        if (!TryGetRecipe(recipeId, out var recipePrototype))
-            return false;
-
-        if(recipePrototype == null || !DoAuthoritativeChecks(recipePrototype, _hands, _lookup, uid)) return false;
-
-        // TODO: We now know we can craft, let's craft. This is on the server, so we should actually do it.
-        return true;
+        var craftingPlayer = ev.User;
+        // TODO: spawn item
     }
+
+
+    private void TryCraft(CraftingRequestReceivedArgs request, EntitySessionEventArgs args)
+    {
+        var senderSession = args.SenderSession;
+        if (!TryGetRecipe(request.RecipeID, out var recipePrototype))
+            return;
+
+        if (senderSession.AttachedEntity == null || recipePrototype == null)
+        {
+            return;
+        }
+
+        if(!DoAuthoritativeChecks(recipePrototype, _hands, _lookup, senderSession.AttachedEntity.Value))
+            return;
+        // TODO: We now know we can craft, let's craft. This is on the server, so we should actually do it.
+        ConsumeRecipeRequirements(senderSession.AttachedEntity.Value, recipePrototype);
+        // spawn item, is worldspace object? use single placement ghost unless shift held.
+        // TODO: figure out how to differentiate item as handheld or not.
+
+
+        // TODO: Doafter
+
+        _doAfter.TryStartDoAfter(
+            new DoAfterArgs(EntityManager, senderSession.AttachedEntity.Value, recipePrototype.DoTime, new CraftingCompletedEvent(recipePrototype.ID,  senderSession.AttachedEntity.Value.Id),  senderSession.AttachedEntity.Value, null, null )
+            {
+                BreakOnDamage = true,
+                BreakOnMove = true,
+                NeedHand = true,
+                BreakOnDropItem = false,
+            });
+    }
+
 
     public void ConsumeRecipeRequirements(EntityUid uid, CraftingRecipePrototype recipe)
     {

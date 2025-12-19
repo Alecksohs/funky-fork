@@ -81,7 +81,7 @@
   suffix: Full
   components:
   - type: Material
-    MaterialId: cardboard
+    materialId: cardboard
   - type: PhysicalComposition
     materialComposition:
       Cardboard: 100
@@ -165,7 +165,7 @@
       enum.StackCustomSplitUiKey.Key:
         type: StackCustomSplitBoundUserInterface
   - type: Material
-    MaterialId: cloth
+    materialId: cloth
   - type: PhysicalComposition
     materialComposition:
       Cloth: 100
@@ -242,7 +242,7 @@
       enum.StackCustomSplitUiKey.Key:
         type: StackCustomSplitBoundUserInterface
   - type: Material
-    MaterialId: durathread
+    materialId: durathread
   - type: PhysicalComposition
     materialComposition:
       Durathread: 100
@@ -295,7 +295,7 @@
   suffix: Full
   components:
   - type: Material
-    MaterialId: wood
+    materialId: wood
   - type: PhysicalComposition
     materialComposition:
       Wood: 100
@@ -355,7 +355,7 @@
   suffix: Full
   components:
   - type: Material
-    MaterialId: biomass
+    materialId: biomass
   - type: PhysicalComposition
     materialComposition:
       Biomass: 1
@@ -466,7 +466,7 @@
         - ReagentId: Carbon
           Quantity: 20
   - type: Material
-    MaterialId: diamond
+    materialId: diamond
   - type: PhysicalComposition
     materialComposition:
       Diamond: 100
@@ -603,7 +603,7 @@
   suffix: Full
   components:
   - type: Material
-    MaterialId: bananium
+    materialId: bananium
   - type: PhysicalComposition
     materialComposition:
       Bananium: 150

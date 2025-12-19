@@ -2,8 +2,8 @@
   id: recipe_MetalRod
   name: "Metal Rod"
   description: "A sturdy metal rod that can be used for various purposes."
-  OutputId: MetalRod
-  craftingCategories: Category-Construction
+  outputId: PartRodMetal1
+  craftingCategory: Category-Construction
   requirements:
     SheetSteel: 5
   requiredTools: []
@@ -15,11 +15,11 @@
   requiredMachineProtoIDs: []
 
 - type: craftingRecipe
-  id: recipe_ClownHorn
+  id: RecipeClownHorn
   name: "Clown Horn"
   description: "A sturdy metal rod that can be used for various purposes."
-  OutputId: MetalRod
-  craftingCategories: Category-Construction
+  outputId: BikeHorn
+  craftingCategory: Category-Construction
   requirements:
     SheetSteel: 5
   requiredTools: []

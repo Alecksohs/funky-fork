@@ -2,16 +2,19 @@ using System.Linq;
 using Content.Client.UserInterface.Systems.MenuBar.Widgets;
 using Content.Shared.CCVar;
 using Content.Shared.CraftingSystem;
+using Content.Shared.Materials;
 using Content.Shared.Whitelist;
 using Robust.Client.GameObjects;
 using Robust.Client.Placement;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
+using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.CraftingSystem.UI;
+
 // Construction Menu Presenter is my base. I'll make the same mistakes.
 public sealed class CraftingMenuPresenter : IDisposable
 {
@@ -21,6 +24,7 @@ public sealed class CraftingMenuPresenter : IDisposable
     [Dependency] private readonly IPlacementManager _placementManager = default!;
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
+
 
     private readonly EntityWhitelistSystem _whitelistSystem;
     private readonly SpriteSystem _spriteSystem;
@@ -37,7 +41,8 @@ public sealed class CraftingMenuPresenter : IDisposable
     public CraftingMenuPresenter()
     {
         IoCManager.InjectDependencies(this);
-        _craftingMenu = new CraftingMenu();
+        _craftingMenu = new CraftingMenu(_prototypeManager);
+        _craftingMenu.Presenter = this;
         _whitelistSystem = _entManager.System<EntityWhitelistSystem>();
         _spriteSystem = _entManager.System<SpriteSystem>();
 
@@ -46,6 +51,9 @@ public sealed class CraftingMenuPresenter : IDisposable
         if (_systemManager.TryGetEntitySystem<CraftingSystem>(out var craftingSystem))
             SystemBindingChanged(craftingSystem);
     }
+
+    public CraftingSystem? GetCraftingSystem => _craftingSystem;
+
 
     private void OnPopulateRecipes(object? sender, (string search, string category, string? materialFilter) e)
     {
@@ -88,8 +96,18 @@ public sealed class CraftingMenuPresenter : IDisposable
                 if (recipe.Requirements.Count != 1)
                     continue;
                 var onlyRequirement = recipe.Requirements.Keys.First();
-                if (onlyRequirement.Id != materialFilter)
+                // Is the only requirement filterable, like does it have a materialcomponent with an ID?
+                if (!_prototypeManager.Resolve(onlyRequirement, out var prototype))
+                {
                     continue;
+                }
+
+                if (prototype.Components.TryGetValue("Material", out var material) &&
+                    material.Component is MaterialComponent materialComponent)
+                {
+                    if (materialComponent.MaterialId != materialFilter)
+                        continue;
+                }
             }
 
             recipes.Add(recipe);
@@ -103,14 +121,13 @@ public sealed class CraftingMenuPresenter : IDisposable
         if (string.IsNullOrEmpty(search))
         {
             recipes.Sort((a, b) =>
-                {
-                    int commonFirst = b.IsCommonRecipe.CompareTo(a.IsCommonRecipe);
-                    if(commonFirst != 0)
-                        return commonFirst;
+            {
+                int commonFirst = b.IsCommonRecipe.CompareTo(a.IsCommonRecipe);
+                if (commonFirst != 0)
+                    return commonFirst;
 
-                    return string.Compare(a.Name, b.Name, StringComparison.Ordinal);
-
-                });
+                return string.Compare(a.Name, b.Name, StringComparison.Ordinal);
+            });
         }
         else
         {
@@ -123,7 +140,11 @@ public sealed class CraftingMenuPresenter : IDisposable
                 return cmp != 0 ? cmp : string.Compare(a.Name, b.Name, StringComparison.InvariantCultureIgnoreCase);
             });
         }
+
+        // It's been sorted, now spawn entries.
+        _craftingMenu.SpawnEntries(recipes);
     }
+
     // In other words, string similarity.
     private static float LevenshteinDistance(string source, string target)
     {
@@ -156,17 +177,14 @@ public sealed class CraftingMenuPresenter : IDisposable
                 distance[i, j] = Math.Min(Math.Min(distance[i - 1, j] + 1,
                         distance[i, j - 1] + 1),
                     distance[i - 1, j - 1] + cost);
-
             }
         }
 
         var eDist = distance[sourceLength, targetLength];
         var maxDist = Math.Max(sourceLength, targetLength);
-        var similarity = 1.0f - (float)eDist / maxDist;
+        var similarity = 1.0f - (float) eDist / maxDist;
         return MathF.Max(0.0f, MathF.Min(1.0f, similarity));
-
     }
-
 
 
     /// <summary>
@@ -258,7 +276,7 @@ public sealed class CraftingMenuPresenter : IDisposable
     public void OpenUIFilteredByMaterial(string? material)
     {
         WindowOpen = true;
-        OnPopulateRecipes(_playerManager.LocalSession, (string.Empty, string.Empty, material) );
+        OnPopulateRecipes(_playerManager.LocalSession, (string.Empty, string.Empty, material));
     }
 
     public void Dispose()
@@ -274,6 +292,7 @@ public sealed class RefreshCraftingMenuCommand : IConsoleCommand
     public string Command => "ploopy";
     public string Description => "mr krabs i plimopted..";
     public string Help => $"Usage: {Command} / {Command} <preset>";
+
     public void Execute(IConsoleShell shell, string argStr, string[] args)
     {
         try
