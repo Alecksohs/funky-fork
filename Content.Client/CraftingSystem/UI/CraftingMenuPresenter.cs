@@ -34,6 +34,11 @@ public sealed class CraftingMenuPresenter : IDisposable
     private CraftingRecipePrototype? _selectedRecipe;
     private List<CraftingRecipePrototype> _favoriteRecipes = [];
 
+    public CraftingRecipePrototype? _cachedRecipe { get; private set; }
+
+    public CraftingRecipePrototype? GetCraftingRecipe => _selectedRecipe;
+
+
     private string _selectedCategory = string.Empty;
     private string _favoriteCategoryName = "crafting-category-favorites";
     private string _allCategoryName = "crafting-category-all";
@@ -277,6 +282,19 @@ public sealed class CraftingMenuPresenter : IDisposable
     {
         WindowOpen = true;
         OnPopulateRecipes(_playerManager.LocalSession, (string.Empty, string.Empty, material));
+    }
+
+    public void SetCraftingRecipe(CraftingRecipePrototype recipe)
+    {
+        _selectedRecipe = recipe;
+    }
+
+    public void UpdateCachedPrototype(CraftingRecipePrototype recipePrototype)
+    {
+        if (recipePrototype.ID != _cachedRecipe?.ID)
+        {
+            _cachedRecipe = recipePrototype;
+        }
     }
 
     public void Dispose()

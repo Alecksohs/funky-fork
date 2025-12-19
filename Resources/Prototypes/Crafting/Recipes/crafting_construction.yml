@@ -9,8 +9,8 @@
   requiredTools: []
   doTime: 3.0
   craftable: true
-  isCommonRecipe: false
-  massCraftable: false
+  isCommonRecipe: true
+  massCraftable: true
   resultStackAmount: 1
   requiredMachineProtoIDs: []
 
@@ -26,6 +26,22 @@
   doTime: 3.0
   craftable: true
   isCommonRecipe: false
+  massCraftable: false
+  resultStackAmount: 1
+  requiredMachineProtoIDs: []
+
+- type: craftingRecipe
+  id: RecipeGirder
+  name: "Wall Girders"
+  description: "Construction's best friend, also a bad description."
+  outputId: Girder
+  craftingCategory: Category-Construction
+  requirements:
+    SheetSteel: 5
+  requiredTools: []
+  doTime: 1
+  craftable: true
+  isCommonRecipe: true
   massCraftable: false
   resultStackAmount: 1
   requiredMachineProtoIDs: []

@@ -21,6 +21,11 @@ public sealed class CraftingSystem : SharedCraftingSystem
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
 
+    // Maybe a bad name. This allows the crafting system to use a ghost placement system if true.
+    // The ghost placement system runs on every tick like the RCD one. I don't like it, but...
+    // Scope creep is something I have to contain, and fixing that is out of my personal scope.
+    public bool isConstructing = false;
+
 
     private CraftingMenuPresenter? _presenter;
 
@@ -42,15 +47,17 @@ public sealed class CraftingSystem : SharedCraftingSystem
         if (entry.Recipe?.ID != null)
         {
             var isHandheld = GetIsHandheld(entry.Recipe, out var outputItem);
-
+            _presenter?.SetCraftingRecipe(entry.Recipe);
             // Decide if we should just craft or refer to ghost which initiates craft.
             if (isHandheld)
             {
+
                 RaiseNetworkEvent(new CraftingRequestReceivedArgs(entry.Recipe.ID));
             }
             else
             {
-                // Todo: construction ghosts time
+                _presenter?.SetCraftingRecipe(entry.Recipe);
+                isConstructing = true;
             }
 
         }

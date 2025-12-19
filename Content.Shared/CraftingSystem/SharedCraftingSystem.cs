@@ -184,31 +184,3 @@ public abstract class SharedCraftingSystem : EntitySystem
 
 }
 
-
-[Serializable, NetSerializable]
-public sealed class CraftingRequestReceivedArgs : EntityEventArgs
-{
-    public string RecipeID { get; }
-
-    public CraftingRequestReceivedArgs(string id)
-    {
-        RecipeID = id;
-    }
-}
-[Serializable, NetSerializable]
-public sealed partial class CraftingCompletedEvent : DoAfterEvent
-{
-    public string RecipeId { get; }
-    public int CrafterUID { get; }
-
-    public CraftingCompletedEvent(string id, int crafter)
-    {
-        RecipeId = id;
-        CrafterUID = crafter;
-    }
-
-    public override DoAfterEvent Clone()
-    {
-        return this;
-    }
-}
