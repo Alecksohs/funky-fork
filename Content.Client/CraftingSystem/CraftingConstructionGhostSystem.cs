@@ -136,15 +136,14 @@ public sealed class CraftingConstructionGhostSystem : EntitySystem
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
+        if(_craftingSystem == null)
+            return;
 
         // Get current placer data
         var placerEntity = _placementManager.CurrentPermission?.MobUid;
         var placerProto = _placementManager.CurrentPermission?.EntityType;
 
-        if (_craftingSystem is not { CraftingEnabled: true })
-        {
-            return;
-        }
+
 
         if (!_craftingSystem.isConstructing)
             return;

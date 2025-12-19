@@ -37,6 +37,7 @@ public sealed class CraftingMenuPresenter : IDisposable
     public CraftingRecipePrototype? _cachedRecipe { get; private set; }
 
     public CraftingRecipePrototype? GetCraftingRecipe => _selectedRecipe;
+    public IPlacementManager GetPlacementManager => _placementManager;
 
 
     private string _selectedCategory = string.Empty;

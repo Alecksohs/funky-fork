@@ -6,7 +6,9 @@ using Content.Shared.DoAfter;
 using Content.Shared.Hands;
 using Content.Shared.Hands.Components;
 using Content.Shared.Item;
+using Robust.Client.Player;
 using Robust.Client.UserInterface;
+using Robust.Shared.Enums;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -20,6 +22,7 @@ public sealed class CraftingSystem : SharedCraftingSystem
 {
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
+    [Dependency] private readonly IPlayerManager _playerManager = default!;
 
     // Maybe a bad name. This allows the crafting system to use a ghost placement system if true.
     // The ghost placement system runs on every tick like the RCD one. I don't like it, but...
@@ -44,10 +47,10 @@ public sealed class CraftingSystem : SharedCraftingSystem
 
     public void CraftingRequestHandler(CraftingMenuEntry entry)
     {
-        if (entry.Recipe?.ID != null)
+        if (entry.Recipe?.ID != null && _presenter != null)
         {
             var isHandheld = GetIsHandheld(entry.Recipe, out var outputItem);
-            _presenter?.SetCraftingRecipe(entry.Recipe);
+            _presenter.SetCraftingRecipe(entry.Recipe);
             // Decide if we should just craft or refer to ghost which initiates craft.
             if (isHandheld)
             {
@@ -56,8 +59,18 @@ public sealed class CraftingSystem : SharedCraftingSystem
             }
             else
             {
-                _presenter?.SetCraftingRecipe(entry.Recipe);
+                _presenter.SetCraftingRecipe(entry.Recipe);
                 isConstructing = true;
+                if (_playerManager.LocalSession?.AttachedEntity != null)
+                {
+                    _presenter.GetPlacementManager.BeginPlacing(new PlacementInformation
+                    {
+                        IsTile = false,
+                        EntityType = entry.Recipe.ID,
+                        MobUid = _playerManager.LocalSession.AttachedEntity.Value,
+                        PlacementOption = nameof(CraftingPlacementMode),
+                    });
+                }
             }
 
         }

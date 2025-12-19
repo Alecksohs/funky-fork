@@ -15,7 +15,7 @@
   requiredMachineProtoIDs: []
 
 - type: craftingRecipe
-  id: RecipeClownHorn
+  id: recipe_ClownHorn
   name: "Clown Horn"
   description: "A sturdy metal rod that can be used for various purposes."
   outputId: BikeHorn
@@ -31,7 +31,7 @@
   requiredMachineProtoIDs: []
 
 - type: craftingRecipe
-  id: RecipeGirder
+  id: recipe_Girder
   name: "Wall Girders"
   description: "Construction's best friend, also a bad description."
   outputId: Girder
